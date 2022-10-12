@@ -23,16 +23,7 @@ const series = [
 ]
 
 
-let option;
-function preguntar() {
-    option = prompt('Elegí la opción deseada:\n1 - Título (A a Z) \n2 - Por categoria \n3 - Mejor a peor puntuado \n4 - Por plataforma \n5 - Por cantidad de episodios \nX - Para salir').toLowerCase();
-}
-
-preguntar();
-
-
-
-console.log(option)
+let option = prompt('Elegí la opción deseada:\n1 - Título (A a Z) \n2 - Por categoria \n3 - Mejor a peor puntuado \n4 - Por plataforma \n5 - Por cantidad de episodios \nX - Para salir').toLowerCase();
 
 while (option != 'x') {
 
@@ -67,7 +58,6 @@ while (option != 'x') {
 
                 if (filterPlatform.length == 0 || chosenPlatform == '') {
                     alert('Lo sentimos. No encontramos coincidencias en nuestro catálogo');
-                    preguntar();
                 } else {
                     return filterPlatform;
                 };
@@ -85,12 +75,8 @@ while (option != 'x') {
                     return filterQty;
                 }
 
-            case '':
-                preguntar();
-
             default:
                 alert('Elegiste una opción inválida');
-                preguntar();
 
         }
     }
