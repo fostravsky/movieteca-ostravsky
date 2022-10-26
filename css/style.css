@@ -1,0 +1,20 @@
+*{
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    
+}
+
+
+.card-img{
+    max-height: 22rem;
+    min-height: 22rem;
+}
+
+.msgError{
+    color: red;
+}
+
+.fa-bookmark{
+    font-size: 38px;
+}
