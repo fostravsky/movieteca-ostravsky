@@ -18,3 +18,49 @@
 .fa-bookmark{
     font-size: 38px;
 }
+
+ul{
+    list-style: none;
+    position: absolute;
+    padding: 5px;
+}
+
+
+.busqueda-thumbnail{
+    max-width: 3rem;
+}
+
+.busqueda-titulo{
+    font-size: 16px;
+}
+
+.busqueda-detalle{
+    padding-left: 25px;
+    padding-top: 10px;
+}
+
+.input-busqueda, li {
+    min-width: 40rem;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+#detallePelicula{
+    margin: 4rem;
+}
+
+.poster-container{
+    width: 300px;
+}
+
+
+.poster{
+    width: 100%;
+}
+
+.infoPelicula{
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

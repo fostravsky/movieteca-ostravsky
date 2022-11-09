@@ -22,8 +22,8 @@ function validarUsuario() {
             title: '¡Bienvenido!',
             showConfirmButton: false,
             timer: 1500
-          })
-        setTimeout( "cambiarInfo(toggles, 'd-none')", 2000);
+        })
+        setTimeout("cambiarInfo(toggles, 'd-none')", 2000);
         errorLogin.innerHTML = ``;
     } else {
         errorLogin.innerHTML = `El usuario y/o contraseña son inválidos`;
@@ -34,9 +34,9 @@ function validarUsuario() {
 
 function validarUsuarioNuevo() {
 
-    const errorUsuario =  document.getElementById('errorUsuario'),
-          errorMail =  document.getElementById('errorMail'),
-          errorPass =  document.getElementById('errorPass');
+    const errorUsuario = document.getElementById('errorUsuario'),
+        errorMail = document.getElementById('errorMail'),
+        errorPass = document.getElementById('errorPass');
 
     let formValido;
 
@@ -62,7 +62,7 @@ function validarUsuarioNuevo() {
 
     }
 
-    if(formValido == true){
+    if (formValido == true) {
 
         Swal.fire({
             position: 'center',
@@ -70,8 +70,8 @@ function validarUsuarioNuevo() {
             title: '¡Usuario creado con exito!',
             showConfirmButton: false,
             timer: 1500
-          })
-        setTimeout( "cambiarInfo(toggles, 'd-none')", 2000);
+        })
+        setTimeout("cambiarInfo(toggles, 'd-none')", 2000);
         crearUsuario();
         guardarEnStorage(usuario, localStorage);
         saludar(recuperarUsuario(localStorage));
@@ -89,7 +89,6 @@ function guardarEnStorage(DB, storage) {
     const user = {
         'nombre': usuario[0].nombre,
         'mail': usuario[0].mail,
-        'pass': usuario[0].pass
     }
 
     storage.setItem('usuario', JSON.stringify(user));
@@ -102,7 +101,7 @@ function recuperarUsuario(storage) {
 
 
 function crearUsuario() {
-    usuario.unshift({ 'nombre': nombreUsuario.value, 'mail': mailLoginNuevo.value, 'pass': passLoginNuevo.value });
+    usuario.unshift({ 'nombre': nombreUsuario.value, 'mail': mailLoginNuevo.value });
 }
 
 
@@ -198,89 +197,241 @@ window.onload = () => estaLogueado(recuperarUsuario(localStorage));
 /////////////////////////////////  FIN LOGIN     /////////////////////////////////
 
 
-
-class Serie {
-
-    constructor(title, author, year, genre, rating, episodes, platform, id) {
-        this.title = title;
-        this.author = author;
-        this.year = parseInt(year);
-        this.genre = genre;
-        this.rating = parseInt(rating);
-        this.episodes = parseInt(episodes);
-        this.platform = platform;
-        this.id = id;
-    }
-
-}
-
-const series = [
-    new Serie('Dahmer Monstruo: La historia de Jeffrey Dahmer', 'Ryan Murphy', 2022, 'Crimen', 8, 10, 'Netflix', 100),
-    new Serie('El Señor de los Anillos: Los anillos de poder', 'John D. Payne', 2022, 'Fantasia', 7, 8, 'Prime Video', 200),
-    new Serie('The Walking Dead', 'Frank Darabont', 2010, 'Fantasia', 8, 177, 'Netflix', 300),
-    new Serie('Game of Thrones', 'David Benioff', 2011, 'Fantasia', 10, 80, 'HBO Max', 400),
-    new Serie('Breaking Bad', 'Vince Gilligan', 2008, 'Drama', 9, 62, 'Netflix', 500),
-    new Serie('Better Call Saul', 'Vince Gilligan', 2015, 'Drama', 10, 63, 'Netflix', 600),
-    new Serie('Dragon Ball Z', 'Akira Toriyama', 1989, 'Anime', 7, 747, 'Torrent', 700),
-    new Serie('Prison Break', 'Paul Scheuring', 2005, 'Drama', 8, 90, 'Star Plus', 800),
-]
-
-const contenedorTarjetas = document.getElementById('cards');
+const detallePelicula = document.getElementById('detallePelicula');
 inputBuscador = document.getElementById('buscar');
-btnBuscardor = document.getElementById('buscador');
+contenedorLista = document.getElementById('busqueda-lista');
+listaBusqueda = document.getElementById('busqueda-lista')
+seguimiento = document.getElementById('seguimiento');
+seguimientoLink = document.getElementById('seguimientoLink');
+
+let eliminarBtn; 
+btnID;
+busqueda;
+movies = [];
+peliculasEnStorage = [];
+peliculaFavorita;
 
 
-function crearCards(array) {
-    contenedorTarjetas.innerHTML = '';
+// Trae las peliculas de la API
 
-    if (array.length != 0) {
-        array.forEach(card => {
-            let html = `<div class="card mb-3 toggles2" id="cards" style="width: 16rem;">
-                        <img src="./images/${card.id}.jpg" class="card-img" alt="...">
-                        <div class="card-body d-flex flex-column justify-content-around">
-                        <h5 class="card-title">${card.title}</h5>
-                        <p class="card-text">${card.author}</p>
-                        <div class="d-flex justify-content-between"><a href="#" class="btn btn-primary more">Ver más</a></div>
-                        </div>
-                    </div>`
-            contenedorTarjetas.innerHTML += html;
-
-        })
-    } else {
-        let mensaje = `<p class="card-text">No encontramos resultados para su busqueda</p> `
-        contenedorTarjetas.innerHTML += mensaje;
-    }
+async function cargarPeliculas(busqueda) {
+    const url = `http://www.omdbapi.com/?s=${busqueda}&apikey=22d953e4`
+    const resultado = await fetch(url)
+    const data = await resultado.json()
+    if (data.Response == "True") cargarLista(data.Search)
 }
 
-crearCards(series);
-
-// inicio buscador //
-
-let busqueda;
+// Input buscador
 
 function buscar() {
-    busqueda = series.filter((serie) => serie[selectedOption.value].toLowerCase().includes((inputBuscador.value).toLowerCase()));
-    return busqueda;
+    busqueda = (inputBuscador.value).trim();
+
+    if (busqueda.length > 0) {
+        listaBusqueda.classList.remove('d-none');
+        cargarLista(movies);
+    } else {
+        listaBusqueda.classList.add('d-none');
+    }
 }
 
-let select = document.getElementById('select');
-select.addEventListener('change',
-    function () {
-        selectedOption = this.options[select.selectedIndex];
+// Carga la lista de peliculas segun lo ingresado en el input de busqueda
+
+function cargarLista(movies) {
+
+    contenedorLista.innerHTML = '';
+
+    for (let id = 0; id < movies.length; id++) {
+
+        let idPelicula = movies[id].imdbID;
+
+
+        if (movies[id].Poster === 'N/A') {
+            movies[id].Poster = './images/100.jpg'
+        }
+
+        let html = `                        
+                <li>
+                    <a id="${idPelicula}" class="d-flex lista" href="">
+                        <div>
+                            <img class="busqueda-thumbnail" src="${movies[id].Poster}" alt="">
+                         </div>
+                        <div class="busqueda-detalle">
+                            <h2 class="busqueda-titulo">${movies[id].Title}</h2>
+                            <p class="busqueda-anio">${movies[id].Year}</p>
+                        </div>
+                    </a>
+                </li>
+            `
+        contenedorLista.innerHTML += html;
+
+
+
+    }
+
+    cargarDetalle();
+
+}
+
+// Trae la info de la pelicula seleccionada para luego crear el detalle
+
+
+function cargarDetalle() {
+
+
+    let itemSeleccionado = document.querySelectorAll('.lista');
+
+
+    itemSeleccionado.forEach(pelicula => {
+
+        pelicula.addEventListener('click', async (e) => {
+            e.preventDefault();
+            listaBusqueda.classList.add('d-none');
+            inputBuscador.value = '';
+            const urlPelicula = `http://www.omdbapi.com/?i=${pelicula.id}&apikey=22d953e4`
+            resultadoPelicula = await fetch(urlPelicula)
+            dataPelicula = await resultadoPelicula.json()
+            mostrarDetalles(dataPelicula);
+
+
+        });
+
     });
 
 
-btnBuscardor.addEventListener('click', (e) => {
-    e.preventDefault();
+}
+
+// Crea el html con la info de la pelicula seleccionada de la lista
+
+function mostrarDetalles(detalle) {
+
+    detallePelicula.classList.remove('d-none')
+
+    if (detalle.Poster === 'N/A') {
+        detalle.Poster = './images/100.jpg'
+    }
+
+    let html = `                        
+    <div  class="poster-container"><img class="poster" src="${detalle.Poster}" alt=""></div>
+    <div class="infoPelicula">
+        <h2  id="${detalle.imdbID}" class="tituloPelicula">${detalle.Title}<span class="released">(${detalle.Released})</span></h2>
+        <p class="genero">${detalle.Genre}<span class="duracion">  ${detalle.Runtime}</span></p>
+        <p class="puntaje">Puntaje:  ${detalle.imdbRating}</p>
+        <h5 class="subtitulo">Resumen:<h5>
+        <p class="resumen">${detalle.Plot}</p>
+        <h5 class="subtitulo">Director:<h5>
+        <p class="diretor">${detalle.Writer}</p>
+        <h5 class="subtitulo">Reparto:<h5>
+        <p class="reparto">${detalle.Actors}</p>
+        <button type="submit" class="btn btn-primary" id="favorito">agregar a favoritos</button>
+    </div>
+    `
+
+    detallePelicula.innerHTML = html;
+
+    let favoritoBtn = document.getElementById('favorito')
+    favoritoBtn.addEventListener('click', (e) => {
+
+        guardarFavoritos(detalle)
+
+    });
+
+}
+
+
+
+inputBuscador.addEventListener('keyup', () => {
+
     buscar();
-    crearCards(busqueda);
+    if (busqueda.length < 3) {
+        buscar();
+    } else {
+        cargarPeliculas(busqueda);
+        cargarLista(movies);
+    }
+
+
+
 });
 
 
-// fin  buscador //
+// Guarda el ID de la peliculas favoritas en en el LocalStorage
+
+function guardarFavoritos(detalle) {
 
 
 
+    peliculaFavorita = {
+        peliculaId: detalle.imdbID,
+    };
+
+
+    peliculasEnStorage = JSON.parse(localStorage.getItem("favoritos"));
+
+    if (peliculasEnStorage == null) {
+        peliculasEnStorage = [];
+    }
+
+    if (peliculasEnStorage.indexOf(peliculaFavorita.peliculaId) === -1) {
+        peliculasEnStorage.push(peliculaFavorita.peliculaId);
+        localStorage.setItem("favoritos", JSON.stringify(peliculasEnStorage));
+    }
+
+
+};
+
+
+
+function recuperarPeliculaStorage() {
+
+    peliculasEnStorage = JSON.parse(localStorage.getItem('favoritos'));
+    return peliculasEnStorage;
+}
+
+
+// Crea el html con las peliculas favoritas/en seguimiento
+
+function mostrarListaSeguimiento() {
+
+    seguimiento.innerHTML = '';
+    
+    seguimiento.classList.remove('d-none') 
+    recuperarPeliculaStorage(peliculasEnStorage);
+
+
+
+    peliculasEnStorage.forEach(async (pelicula) => {
+
+        const urlPelicula = `http://www.omdbapi.com/?i=${pelicula}&apikey=22d953e4`
+        resultadoPelicula = await fetch(urlPelicula)
+        dataPelicula = await resultadoPelicula.json()
+
+        let html = `                        
+        <div  class="poster-container"><img class="poster" src="${dataPelicula.Poster}" alt=""></div>
+        <div class="infoPelicula" id="${dataPelicula.imdbID}">
+            <h2 class="tituloPelicula">${dataPelicula.Title}</h2>
+            <p class="released">(${dataPelicula.Released})</p>
+            <p class="puntaje">Puntaje:  ${dataPelicula.imdbRating}</p>
+            <p class="resumen">${dataPelicula.Plot}</p>
+            <p class="diretor">${dataPelicula.Writer}</p>
+            <button type="submit" data-id="${dataPelicula.imdbID}" class="btn btn-primary eliminarBtn">Eliminar</button>
+        </div>
+        `
+
+        seguimiento.innerHTML += html;
+
+    
+        
+
+    });
+
+    
+}
+
+
+seguimientoLink.addEventListener('click', (e) => {
+    mostrarListaSeguimiento();
+
+})
 
 
 

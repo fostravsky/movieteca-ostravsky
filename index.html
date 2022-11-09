@@ -36,24 +36,33 @@
             <div class="navbar bg-light justify-content-start">
               <a class="navbar-brand">Movieteca</a>
               <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search" id="buscar">
-                <select class="form-select" aria-label="Default select example" id="select">
-                    <option value="" selected disabled >Elegí el criterio</option>
-                    <option value="title">Serie</option>
-                    <option value="platform">Por plataforma</option>
-                    <option value="genre">Por género</option>
-                  </select>
-                <button class="btn btn-outline-success" type="submit" id="buscador">Buscar</button>
-              </form>
+                <div class="lista-container">
+                    <input class="input-busqueda form-control me-2" type="search" placeholder="Buscar" aria-label="Search" id="buscar">
+                    <div class="busqueda-lista">
+                             <ul id="busqueda-lista"></ul> 
+                    </div> 
+                </div>
             </div>
             <div class="d-flex align-items-center">
+                <a href="#" id="seguimientoLink">Lista de seguimento</a>
                 <p class="m-0 p-1" id="saludo"></p>
                 <a id="logout">Logout</a>
             </div>  
         </nav>
-        <div id="cards" class="container d-flex flex-wrap justify-content-around">
-    
+        <div id="detallePelicula" class="container d-flex flex-wrap justify-content-around d-none">
+            <div><img src="" alt=""></div>
+            <div>
+                <h2 class="tituloPelicula"><span class="released"></span></h2>
+                <p class="genero"><span class="duracion"></span></p>
+                <p class="puntaje"></p>
+                <p class="resumen"></p>
+                <p class="diretor"></p>
+                <p class="reparto"></p>
+            </div>
         </div>
+    </div>
+    <div id="seguimiento" class="d-none">
+
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
