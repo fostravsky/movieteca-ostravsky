@@ -13,6 +13,8 @@ toggles = document.querySelectorAll('.toggles');
 msgError = document.querySelectorAll('.form-text');
 
 
+// Valida si el usuario ya registrado en la "DB" ingreso los datos correctamente
+
 function validarUsuario() {
 
     if (mailLogin.value === usuario[0].mail && passLogin.value === usuario[0].pass) {
@@ -30,7 +32,7 @@ function validarUsuario() {
     }
 }
 
-
+// Valida todos los campos del formulario: nombre, mail y contraseñ
 
 function validarUsuarioNuevo() {
 
@@ -79,11 +81,15 @@ function validarUsuarioNuevo() {
 
 }
 
+// Cambia la vista entre el login y vista principal
+
 function cambiarInfo(array, clase) {
     array.forEach(element => {
         element.classList.toggle(clase);
     });
 }
+
+// Guardar el usuario en el storage
 
 function guardarEnStorage(DB, storage) {
     const user = {
@@ -94,16 +100,20 @@ function guardarEnStorage(DB, storage) {
     storage.setItem('usuario', JSON.stringify(user));
 };
 
+// Recupera el usuario del storage
+
 function recuperarUsuario(storage) {
     let usuarioEnStorage = JSON.parse(storage.getItem('usuario'));
     return usuarioEnStorage;
 }
 
+// Crea el nuevo usuario
 
 function crearUsuario() {
     usuario.unshift({ 'nombre': nombreUsuario.value, 'mail': mailLoginNuevo.value });
 }
 
+// Muestra el nombre del usuario en el navbar
 
 function saludar(usuario) {
 
@@ -114,11 +124,14 @@ function saludar(usuario) {
     saludo.innerHTML += mostrarUsuario;
 }
 
+// Borra los datos del usario del storage
+
 function borrarDatos() {
     localStorage.clear();
     sessionStorage.clear();
 }
 
+// Valida si el usuario esta logueado
 
 function estaLogueado(usuario) {
 
@@ -131,7 +144,6 @@ function estaLogueado(usuario) {
 
 btnLogin.addEventListener('click', (e) => {
     e.preventDefault();
-
     validarUsuario();
 
     if (checkLogin.checked) {
@@ -152,7 +164,7 @@ registro.addEventListener('click', (e) => {
 
     document.getElementById('formLogin').className += ' d-none';
 
-    let html = `<form class="container">
+    let html = `<form class="container formulario d-flex flex-column align-items-center">
                         <div class="mb-3">
                             <label for="validationCustom01" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="nombre" aria-describedby="emailHelp" required>
@@ -204,17 +216,19 @@ listaBusqueda = document.getElementById('busqueda-lista')
 seguimiento = document.getElementById('seguimiento');
 seguimientoLink = document.getElementById('seguimientoLink');
 
-let eliminarBtn; 
-btnID;
-busqueda;
-movies = [];
-peliculasEnStorage = [];
-peliculaFavorita;
+let botones = []; 
+let btnID;
+let busqueda;
+let movies = [];
+let peliculasEnStorage = [];
+let peliculaFavorita;
+
 
 
 // Trae las peliculas de la API
 
 async function cargarPeliculas(busqueda) {
+
     const url = `http://www.omdbapi.com/?s=${busqueda}&apikey=22d953e4`
     const resultado = await fetch(url)
     const data = await resultado.json()
@@ -246,12 +260,12 @@ function cargarLista(movies) {
 
 
         if (movies[id].Poster === 'N/A') {
-            movies[id].Poster = './images/100.jpg'
+            movies[id].Poster = './images/noavailable.jpg'
         }
 
         let html = `                        
                 <li>
-                    <a id="${idPelicula}" class="d-flex lista" href="">
+                    <a id="${idPelicula}" class="d-flex lista align-items-center" href="">
                         <div>
                             <img class="busqueda-thumbnail" src="${movies[id].Poster}" alt="">
                          </div>
@@ -272,8 +286,9 @@ function cargarLista(movies) {
 
 }
 
-// Trae la info de la pelicula seleccionada para luego crear el detalle
 
+
+// Trae la info de la pelicula seleccionada para luego crear el detalle
 
 function cargarDetalle() {
 
@@ -297,8 +312,8 @@ function cargarDetalle() {
 
     });
 
+} 
 
-}
 
 // Crea el html con la info de la pelicula seleccionada de la lista
 
@@ -307,7 +322,7 @@ function mostrarDetalles(detalle) {
     detallePelicula.classList.remove('d-none')
 
     if (detalle.Poster === 'N/A') {
-        detalle.Poster = './images/100.jpg'
+        detalle.Poster = './images/noavailable.jpg'
     }
 
     let html = `                        
@@ -322,7 +337,7 @@ function mostrarDetalles(detalle) {
         <p class="diretor">${detalle.Writer}</p>
         <h5 class="subtitulo">Reparto:<h5>
         <p class="reparto">${detalle.Actors}</p>
-        <button type="submit" class="btn btn-primary" id="favorito">agregar a favoritos</button>
+        <button type="submit" class="btn btn-primary" id="favorito">Agregar a seguimiento</button>
     </div>
     `
 
@@ -332,7 +347,7 @@ function mostrarDetalles(detalle) {
     favoritoBtn.addEventListener('click', (e) => {
 
         guardarFavoritos(detalle)
-
+        seguimientoTostify()
     });
 
 }
@@ -348,9 +363,6 @@ inputBuscador.addEventListener('keyup', () => {
         cargarPeliculas(busqueda);
         cargarLista(movies);
     }
-
-
-
 });
 
 
@@ -358,12 +370,9 @@ inputBuscador.addEventListener('keyup', () => {
 
 function guardarFavoritos(detalle) {
 
-
-
     peliculaFavorita = {
         peliculaId: detalle.imdbID,
     };
-
 
     peliculasEnStorage = JSON.parse(localStorage.getItem("favoritos"));
 
@@ -376,10 +385,9 @@ function guardarFavoritos(detalle) {
         localStorage.setItem("favoritos", JSON.stringify(peliculasEnStorage));
     }
 
-
 };
 
-
+// Recupera las peliculas en seguimiento del storage
 
 function recuperarPeliculaStorage() {
 
@@ -388,50 +396,24 @@ function recuperarPeliculaStorage() {
 }
 
 
-// Crea el html con las peliculas favoritas/en seguimiento
 
-function mostrarListaSeguimiento() {
+function seguimientoTostify(){
 
-    seguimiento.innerHTML = '';
-    
-    seguimiento.classList.remove('d-none') 
-    recuperarPeliculaStorage(peliculasEnStorage);
+Toastify({
+    text: "Agregada a seguimiento",
+    duration: 2000,
+    newWindow: true,
+    close: true,
+    gravity: "top", // `top` or `bottom`
+    position: "right", // `left`, `center` or `right`
+    stopOnFocus: true, // Prevents dismissing of toast on hover
+    style: {
+      background: "linear-gradient(to right, #00b09b, #96c93d)",
+    },
+    onClick: function(){} // Callback after click
+  }).showToast();
 
-
-
-    peliculasEnStorage.forEach(async (pelicula) => {
-
-        const urlPelicula = `http://www.omdbapi.com/?i=${pelicula}&apikey=22d953e4`
-        resultadoPelicula = await fetch(urlPelicula)
-        dataPelicula = await resultadoPelicula.json()
-
-        let html = `                        
-        <div  class="poster-container"><img class="poster" src="${dataPelicula.Poster}" alt=""></div>
-        <div class="infoPelicula" id="${dataPelicula.imdbID}">
-            <h2 class="tituloPelicula">${dataPelicula.Title}</h2>
-            <p class="released">(${dataPelicula.Released})</p>
-            <p class="puntaje">Puntaje:  ${dataPelicula.imdbRating}</p>
-            <p class="resumen">${dataPelicula.Plot}</p>
-            <p class="diretor">${dataPelicula.Writer}</p>
-            <button type="submit" data-id="${dataPelicula.imdbID}" class="btn btn-primary eliminarBtn">Eliminar</button>
-        </div>
-        `
-
-        seguimiento.innerHTML += html;
-
-    
-        
-
-    });
-
-    
 }
-
-
-seguimientoLink.addEventListener('click', (e) => {
-    mostrarListaSeguimiento();
-
-})
 
 
 

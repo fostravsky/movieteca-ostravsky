@@ -5,6 +5,10 @@
     
 }
 
+body{
+    background-color: black;
+    color: white;
+}
 
 .card-img{
     max-height: 22rem;
@@ -23,6 +27,24 @@ ul{
     list-style: none;
     position: absolute;
     padding: 5px;
+}
+
+li{
+    background-color: #121b1b;
+    border-bottom: 2px solid white;
+}
+
+.lista{
+    color: white;
+}
+
+.formulario{
+    margin: 80px auto;
+}
+
+.form-control, .msgError{
+    min-width: 400px;
+    max-width: 400px;
 }
 
 
@@ -58,9 +80,30 @@ ul{
     width: 100%;
 }
 
+.poster-seguimiento{
+    width: 200px;
+}
+
 .infoPelicula{
     width: 600px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+h3{
+    text-align: center;
+}
+
+.registrarse{
+    margin: 20px;
+}
+
+.navbar-brand{
+    padding-left: 10px;
+    color:darkorange;
+}
+
+.nav-der{
+    width: 400px;
 }

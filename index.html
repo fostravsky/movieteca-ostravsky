@@ -7,11 +7,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <div class="toggles">
-        <form id="formLogin" class="container">
+        <nav class="navbar bg-dark">
+            <div class="navbar bg-dark justify-content-start">
+              <a class="navbar-brand">Movieteca</a>
+            </div>
+        </nav>
+        <form id="formLogin" class="container formulario d-flex flex-column align-items-center">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Mail</label>
                 <input type="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp">
@@ -24,17 +30,19 @@
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="inputCheck">
                 <label class="form-check-label" for="exampleCheck1">Recordarme</label>
-                <p id="errorLogin"></p>
+                <p id="errorLogin" class="msgError"></p>
             </div>
             <button type="submit" class="btn btn-primary" id="login">Ingresar</button>
-            <p>¿No tenes una cuenta?<button type="submit" id="registro">Registrate aqui</button></p>
+            <div class="registrarse">
+            <p>¿No tenes una cuenta?<button type="submit" class="btn btn-warning" id="registro">Registrate aqui</button></p>
+            </div>
         </form>
         <div id="registroLogin"></div>
     </div>
     <div class="toggles d-none">
-        <nav class="navbar bg-light">
-            <div class="navbar bg-light justify-content-start">
-              <a class="navbar-brand">Movieteca</a>
+        <nav class="navbar bg-dark">
+            <div class="navbar bg-dark justify-content-start">
+              <a href="#" class="navbar-brand">Movieteca</a>
               <form class="d-flex" role="search">
                 <div class="lista-container">
                     <input class="input-busqueda form-control me-2" type="search" placeholder="Buscar" aria-label="Search" id="buscar">
@@ -43,30 +51,18 @@
                     </div> 
                 </div>
             </div>
-            <div class="d-flex align-items-center">
-                <a href="#" id="seguimientoLink">Lista de seguimento</a>
+            <div class="nav-der d-flex align-items-center justify-content-evenly ">
+                <a href="./pages/favoritos.html" id="seguimientoLink">Lista de seguimento</a>
                 <p class="m-0 p-1" id="saludo"></p>
-                <a id="logout">Logout</a>
+                <a href="#"id="logout">Logout</a>
             </div>  
         </nav>
         <div id="detallePelicula" class="container d-flex flex-wrap justify-content-around d-none">
-            <div><img src="" alt=""></div>
-            <div>
-                <h2 class="tituloPelicula"><span class="released"></span></h2>
-                <p class="genero"><span class="duracion"></span></p>
-                <p class="puntaje"></p>
-                <p class="resumen"></p>
-                <p class="diretor"></p>
-                <p class="reparto"></p>
-            </div>
         </div>
     </div>
-    <div id="seguimiento" class="d-none">
-
-    </div>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.2/dist/sweetalert2.all.min.js"></script>
-    <script src="./js/script.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="./js/main.js"></script>
 </body>
 </html>
